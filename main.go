@@ -48,6 +48,17 @@ func main() {
 	config := [][]int{
 		{1490, 26}, //tikubiaohao, the num of pages
 		{1471, 55},
+		{1492, 27},
+		{1491, 11},
+		{1489, 9},
+		{1488, 10},
+		{1436, 50},
+		{1467, 26},
+		{1471, 55},
+		{1484, 18},
+		{1485, 9},
+		{1486, 9},
+		{1487, 4},
 	}
 	pagesUrls := []string{}
 	for _, v := range config {
@@ -56,25 +67,37 @@ func main() {
 				"http://safeexam.hdu.edu.cn/redir.php?catalog_id=6&cmd=learning&tikubh="+strconv.Itoa(v[0])+"&page="+strconv.Itoa(i))
 		}
 	}
+	go parseTest()
+
 	for _, page := range pagesUrls {
 		fmt.Fprintln(os.Stderr, "get ", page)
 		go get(page)
 	}
-	go parseTest()
-	for t := range tests {
-		if t.testType == "判断" {
-			fmt.Println("INSERT INTO JExam (ID,problem,answer) VALUES (" + t.id + ",'" + t.question + "','" + t.answer + "');")
-		} else {
-			str := "INSERT INTO CExam (ID,problem,choice_A,choice_B,choice_C,choice_D,answer) VALUES (" + t.id + ",'" + t.question + "'"
-			for _, op := range t.options {
-				str += ", '" + op + "'"
+
+	/*
+		for t := range tests {
+			if t.testType == "判断" {
+				fmt.Println("INSERT INTO JExam (ID,problem,answer) VALUES (" + t.id + ",'" + t.question + "','" + t.answer + "');")
+			} else {
+				str := "INSERT INTO CExam (ID,problem,choice_A,choice_B,choice_C,choice_D,answer) VALUES (" + t.id + ",'" + t.question + "'"
+				for _, op := range t.options {
+					str += ", '" + op + "'"
+				}
+				if len(t.options) == 3 {
+					str += ", '空'"
+				}
+				str += ", '" + t.answer + "');"
+				fmt.Println(str)
 			}
-			if len(t.options) == 3 {
-				str += ", '空'"
-			}
-			str += ", '" + t.answer + "');"
-			fmt.Println(str)
 		}
+	*/
+	for t := range tests {
+		fmt.Println(t.id, "(", t.testType, ")", t.question)
+		fmt.Println(t.classType, t.answer)
+		for _, op := range t.options {
+			fmt.Println(op)
+		}
+		fmt.Println()
 	}
 
 }
