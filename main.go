@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/axgle/mahonia"
 )
@@ -89,12 +90,12 @@ func parseTest() {
 		testRes := testRe.FindAllStringSubmatch(exam, -1)
 		for _, test := range testRes {
 			var t testQuestion
-			t.testType = testType
-			t.classType = classType
-			t.id, t.question, t.answer = test[1], test[2], test[4]
+			t.testType = strings.TrimSpace(testType)
+			t.classType = strings.TrimSpace(classType)
+			t.id, t.question, t.answer = strings.TrimSpace(test[1]), strings.TrimSpace(test[2]), strings.TrimSpace(test[4])
 			opRes := optionRe.FindAllStringSubmatch(test[3], -1)
 			for _, op := range opRes {
-				t.options = append(t.options, op[1])
+				t.options = append(t.options, strings.TrimSpace(op[1]))
 			}
 			tests <- t
 		}
